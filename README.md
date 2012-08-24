@@ -1,3 +1,5 @@
-# Nothing to see here yet.
+# Jared Norman's Ludum Dare 24 Special Sauce
 
-Move along.
+Ingredients:
+
+    - none yet
