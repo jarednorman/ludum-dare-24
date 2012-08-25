@@ -7,7 +7,7 @@ class LevelTile
 
   constructor: ->
     @contents = []
-    @is_wall = false;
+    @is_wall = true;
 
   getChar: ->
     if @is_wall
@@ -17,6 +17,9 @@ class LevelTile
 
   makeWall: ->
     @is_wall = true
+
+  removeWall: ->
+    @is_wall = false
 
   isWall: ->
     @is_wall
@@ -34,10 +37,6 @@ class Level
         row = []
         for x in [0..WORLD_WIDTH - 1]
           row[x] = new LevelTile
-          if x == 0 or x == WORLD_WIDTH - 1 or y == 0 or y == WORLD_HEIGHT - 1
-            row[x].makeWall()
-          else if Math.random() > 0.9
-            row[x].makeWall()
         map[y] = row
       map
 
