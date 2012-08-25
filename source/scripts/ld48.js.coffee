@@ -3,6 +3,51 @@
 WORLD_WIDTH = 47
 WORLD_HEIGHT = 27
 
+class Thing
+
+  char: '?'
+
+  constructor: (@level) ->
+    @randomlyPlace()
+
+  randomlyPlace: ->
+    while true
+      x = Math.floor Math.random() * WORLD_WIDTH
+      y = Math.floor Math.random() * WORLD_HEIGHT
+      if @level.isEmpty(y, x)
+        console.log y, x
+        @place(y, x)
+        break
+
+  place: (y, x) ->
+    @tile = @level.map[y][x]
+    @tile.contents.push this
+
+  getChar: ->
+    @char
+
+class LivingThing extends Thing
+    
+  char: 'o'
+  
+  maxHealth: 1
+
+  constructor: (@level) ->
+    super(@level)
+    @health = @maxHealth
+
+  notDead: ->
+    @health > 0
+
+class Player extends LivingThing
+
+  char: '@'
+
+  maxHealth: 5
+
+  constructor: (@level) ->
+    super(@level)
+
 class LevelTile
 
   constructor: ->
@@ -10,8 +55,10 @@ class LevelTile
     @is_wall = true;
 
   getChar: ->
-    if @is_wall
+    if @isWall()
       '#'
+    else if @contents.length > 0
+      @contents[0].getChar()
     else
       '.'
 
@@ -25,7 +72,7 @@ class LevelTile
     @is_wall
 
   isEmpty: ->
-    @contents.length == 0
+    @contents.length == 0 and (not @isWall())
 
 class Level
 
@@ -105,6 +152,9 @@ class Level
   getChar: (y, x) ->
     @map[y][x].getChar()
 
+  isEmpty: (y, x) ->
+    @map[y][x].isEmpty()
+
 
 class MapView extends Backbone.View
 
@@ -149,7 +199,10 @@ class LDView extends Backbone.View
 
     @difficulty = 0
     @current_level = new Level @difficulty
+
     @mapView = new MapView @current_level
+    @player = new Player @current_level
+    @mapView.render()
 
   initializeHelp: ->
     @help_button.click =>
