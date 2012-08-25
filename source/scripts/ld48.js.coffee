@@ -5,7 +5,7 @@ WORLD_HEIGHT = 19
 
 class Level
 
-  constructor: ->
+  constructor: (difficulty) ->
 
 class MapView extends Backbone.View
 
