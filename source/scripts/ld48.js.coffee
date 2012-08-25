@@ -1,3 +1,6 @@
+class Level
+
+  constructor: ->
 
 class MapView extends Backbone.View
 
@@ -22,7 +25,19 @@ class LDView extends Backbone.View
   el: ($ '#page-wrap')
 
   initialize: ->
+    @help_button = (@$ '#help-button')
+    @help_overlay = (@$ '#help')
+    @initializeHelp()
+
+    @difficulty = 0
+    @current_level = new Level @difficulty
     @mapView = new MapView 19, 33
+
+  initializeHelp: ->
+    @help_button.click =>
+      @help_overlay.css { display: 'block' }
+    @help_overlay.click =>
+      @help_overlay.css { display: 'none' }
 
   render: ->
 
