@@ -3,18 +3,28 @@
 WORLD_WIDTH = 33
 WORLD_HEIGHT = 19
 
+class LevelTile
+
 class Level
 
   constructor: (difficulty) ->
+    console.log "making a level with difficulty: #{difficulty}"
+    @map = do ->
+      for y in [0..WORLD_HEIGHT - 1]
+        row = []
+        for x in [0..WORLD_WIDTH - 1]
+          row[x] = new LevelTile
+
+  getTile: (x, y) ->
 
 class MapView extends Backbone.View
 
   el: ($ '#game-area')
 
   initialize: (@level) ->
-    for y in [0..WORLD_HEIGHT-1]
+    for y in [0..WORLD_HEIGHT - 1]
       row = ($ '<p>').attr('id', y.toString())
-      for x in [0..WORLD_WIDTH-1]
+      for x in [0..WORLD_WIDTH - 1]
         cell = ($ '<span>')
         cell.attr('id', x.toString())
         if x == 0 or x == WORLD_WIDTH - 1 or y == 0 or y == WORLD_HEIGHT - 1
