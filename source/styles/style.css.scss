@@ -2,4 +2,93 @@
 
 @import 'compass';
 @import 'compass/reset';
+@import url(http://fonts.googleapis.com/css?family=Press+Start+2P);
+
+$other-blue: #c6ffed;
+$blue: #4b92ff;
+$orange: #ff8159;
+$white: #fbfcff;
+
+body {
+  background-color: $other-blue;
+  font-family: "Press Start 2P", monospace;
+  font-size: 14px;
+  line-height: 18px;
+}
+
+#page-wrap {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+
+  #title {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+
+    h1 {
+    font-size: 30px;
+
+      a {
+        text-decoration: none;
+        color: $blue;
+
+        &:link {
+        }
+
+        &:visited {
+        }
+
+        &:hover {
+        }
+
+        &:active {
+        }
+      }
+    }
+  }
+
+  #game-area {
+  }
+
+  #buttons {
+  }
+
+  #log {
+  }
+
+  #help-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 6px;
+    @include border-radius(5px);
+
+    background-color: $orange;
+    font-size: 8px;
+    color: $white;
+    cursor: pointer;
+  }
+
+  #help {
+    display: none;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    padding: 100px;
+    z-index: 9000;
+
+    background-color: rgba(0, 0, 0, 0.7);
+    color: $white;
+    
+    h1 {
+      margin-top: 20px;
+      color: $other-blue;
+    }
+  }
+}
 
