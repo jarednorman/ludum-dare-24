@@ -265,7 +265,6 @@ class Level
 
           connected.push [source, destination]
 
-
   getChar: (y, x) ->
     @map[y][x].getChar()
 
