@@ -75,21 +75,22 @@ body {
 
   #buttons {
     position: absolute;
-    top: 70px;
+    top: 75px;
     right: 20px;
-    width: 300px;
+    width: 312px;
     padding: 0px;
 
     background-color: $purple;
-    @include border-radius(8px);
+    @include border-radius(4px);
+    font-size: 16px;
 
     .button {
       display: inline-block;
-      margin: 8px;
-      padding: 8px;
+      margin: 4px;
+      padding: 4px;
 
       background-color: $white;
-      @include border-radius(8px);
+      @include border-radius(4px);
     }
   }
 
@@ -97,12 +98,13 @@ body {
     position: absolute;
     bottom: 20px;
     right: 20px;
-    width: 300px - 16px;
+    width: 312px - 16px;
     padding: 8px;
 
     @include border-radius(8px);
     background-color: $blue;
     color: $white;
+    font-size: 14px;
 
     p {
       margin-bottom: 10px;
