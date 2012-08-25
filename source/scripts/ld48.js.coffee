@@ -16,6 +16,7 @@ class MapView extends Backbone.View
       row = ($ '<p>').attr('id', y.toString())
       for x in [0..WORLD_WIDTH-1]
         cell = ($ '<span>')
+        cell.attr('id', x.toString())
         if x == 0 or x == WORLD_WIDTH - 1 or y == 0 or y == WORLD_HEIGHT - 1
           cell.text '#'
         else
