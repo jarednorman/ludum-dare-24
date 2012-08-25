@@ -1,7 +1,7 @@
 
 # constants because I am a C programmer with bad habits
-WORLD_WIDTH = 33
-WORLD_HEIGHT = 19
+WORLD_WIDTH = 47
+WORLD_HEIGHT = 27
 
 class LevelTile
 
@@ -55,8 +55,8 @@ class Level
         x: 1 + Math.floor Math.random() * (WORLD_WIDTH - @minimumRoomSize - 1)
         y: 1 + Math.floor Math.random() * (WORLD_HEIGHT - @minimumRoomSize - 1)
 
-      max_width = WORLD_WIDTH - room.x - 1
-      max_height = WORLD_HEIGHT - room.y - 1
+      max_width = WORLD_WIDTH - room.x
+      max_height = WORLD_HEIGHT - room.y 
 
       room.w = @minimumRoomSize + Math.floor Math.random() * (max_width - @minimumRoomSize - 1) * room_scale
       room.h = @minimumRoomSize + Math.floor Math.random() * (max_height - @minimumRoomSize - 1) * room_scale
