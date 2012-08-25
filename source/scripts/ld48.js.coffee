@@ -7,9 +7,22 @@ class LevelTile
 
   constructor: ->
     @contents = []
+    @is_wall = false;
 
   getChar: ->
-    return '.'
+    if @is_wall
+      '#'
+    else
+      '.'
+
+  makeWall: ->
+    @is_wall = true
+
+  isWall: ->
+    @is_wall
+
+  isEmpty: ->
+    @contents.length == 0
 
 class Level
 
@@ -21,11 +34,16 @@ class Level
         row = []
         for x in [0..WORLD_WIDTH - 1]
           row[x] = new LevelTile
+          if x == 0 or x == WORLD_WIDTH - 1 or y == 0 or y == WORLD_HEIGHT - 1
+            row[x].makeWall()
+          else if Math.random() > 0.9
+            row[x].makeWall()
         map[y] = row
       map
 
-  getTile: (y, x) ->
-    '.'
+  getChar: (y, x) ->
+    @map[y][x].getChar()
+
 
 class MapView extends Backbone.View
 
@@ -37,10 +55,7 @@ class MapView extends Backbone.View
       for x in [0..WORLD_WIDTH - 1]
         cell = ($ '<span>')
         cell.attr('id', x.toString())
-        if x == 0 or x == WORLD_WIDTH - 1 or y == 0 or y == WORLD_HEIGHT - 1
-          cell.text '#'
-        else
-          cell.text '.'
+        cell.text ' '
         row.append(cell)
       @$el.append(row)
 
@@ -58,7 +73,7 @@ class MapView extends Backbone.View
   render: ->
     for row, y in @screen
       for cell, x in row
-        char = @level.getTile(y, x)
+        char = @level.getChar(y, x)
         cell.text(char) if cell.text() != char
 
 
