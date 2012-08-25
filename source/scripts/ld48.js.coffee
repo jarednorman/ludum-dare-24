@@ -5,17 +5,27 @@ WORLD_HEIGHT = 19
 
 class LevelTile
 
+  constructor: ->
+    @contents = []
+
+  getChar: ->
+    return '.'
+
 class Level
 
   constructor: (difficulty) ->
     console.log "making a level with difficulty: #{difficulty}"
     @map = do ->
+      map = []
       for y in [0..WORLD_HEIGHT - 1]
         row = []
         for x in [0..WORLD_WIDTH - 1]
           row[x] = new LevelTile
+        map[y] = row
+      map
 
-  getTile: (x, y) ->
+  getTile: (y, x) ->
+    '.'
 
 class MapView extends Backbone.View
 
@@ -34,7 +44,23 @@ class MapView extends Backbone.View
         row.append(cell)
       @$el.append(row)
 
+    @screen = do =>
+      screen = []
+      (@$ 'p').each (p_index, p) ->
+        row = []
+        ($ p).children().each (span_index, span) ->
+          row[span_index] = ($ span)
+        screen[p_index] = row
+      screen
+
+    @render()
+
   render: ->
+    for row, y in @screen
+      for cell, x in row
+        char = @level.getTile(y, x)
+        cell.text(char) if cell.text() != char
+
 
 class LDView extends Backbone.View
 
