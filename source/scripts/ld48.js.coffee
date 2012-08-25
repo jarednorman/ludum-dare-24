@@ -1,3 +1,8 @@
+
+# constants because I am a C programmer with bad habits
+WORLD_WIDTH = 33
+WORLD_HEIGHT = 19
+
 class Level
 
   constructor: ->
@@ -6,12 +11,12 @@ class MapView extends Backbone.View
 
   el: ($ '#game-area')
 
-  initialize: (@rows, @columns) ->
-    for y in [0..@rows-1]
+  initialize: (@level) ->
+    for y in [0..WORLD_HEIGHT-1]
       row = ($ '<p>').attr('id', y.toString())
-      for x in [0..@columns-1]
+      for x in [0..WORLD_WIDTH-1]
         cell = ($ '<span>')
-        if x == 0 or x == @columns - 1 or y == 0 or y == @rows - 1
+        if x == 0 or x == WORLD_WIDTH - 1 or y == 0 or y == WORLD_HEIGHT - 1
           cell.text '#'
         else
           cell.text '.'
@@ -31,7 +36,7 @@ class LDView extends Backbone.View
 
     @difficulty = 0
     @current_level = new Level @difficulty
-    @mapView = new MapView 19, 33
+    @mapView = new MapView @current_level
 
   initializeHelp: ->
     @help_button.click =>
