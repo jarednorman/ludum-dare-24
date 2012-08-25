@@ -40,6 +40,8 @@ class Level
         map[y] = row
       map
 
+  generateSpaces: ->
+
   getChar: (y, x) ->
     @map[y][x].getChar()
 
