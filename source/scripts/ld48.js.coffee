@@ -92,6 +92,15 @@ class LevelTile
     else
       return @level.map[y][x]
 
+  getActions: ->
+    if @isEmpty()
+      noop =
+        description: "do nothing"
+        f: ->
+        arg: {}
+      [noop]
+    else
+      []
 
   makeWall: ->
     @is_wall = true
@@ -104,6 +113,32 @@ class LevelTile
 
   isEmpty: ->
     @contents.length == 0 and (not @isWall())
+
+class ActionsView extends Backbone.View
+
+  el: ($ '#buttons')
+
+  initialize: ->
+    @actions = []
+
+  render: ->
+    @$el.empty()
+    for action in @actions
+      @addButton action
+
+
+  addButton: (action) ->
+    description = action.description
+    f = action.f
+    arg = action.arg
+    button = ($ '<div class="button">').text(description)
+    @$el.append button
+    
+  setActions: (actions) ->
+    @actions = actions
+    @render()
+
+  doAction: (text) ->
 
 class Level
 
@@ -229,16 +264,14 @@ class LDView extends Backbone.View
   el: ($ '#page-wrap')
 
   initialize: ->
-    @help_button = (@$ '#help-button')
-    @help_overlay = (@$ '#help')
-    @initializeHelp()
-
     @difficulty = 0
     @current_level = new Level @difficulty
 
     @mapView = new MapView @current_level
     @player = new Player @current_level
     @mapView.render()
+
+    @actionsView = new ActionsView
 
     # setup controls
 
@@ -260,13 +293,20 @@ class LDView extends Backbone.View
             @current_level.update()
         @mapView.render()
       click: (event) =>
-        console.log event
+        target = ($ event.target)
+        if target.is 'p span'
+          @select(target) 
+        else if target.is '#help-button'
+          ($ '#help').css { display: 'block' }
+        else if target.is '#help'
+          target.css { display: 'none' }
 
-  initializeHelp: ->
-    @help_button.click =>
-      @help_overlay.css { display: 'block' }
-    @help_overlay.click =>
-      @help_overlay.css { display: 'none' }
+  select: (target) ->
+    x = target.attr('id')
+    y = target.parent().attr('id')
+    ($ '#game-area span').removeClass 'active'
+    target.addClass 'active'
+    @actionsView.setActions @current_level.map[y][x].getActions()
 
   render: ->
 
