@@ -44,8 +44,8 @@ class Level
     @generateSpaces()
 
   generateSpaces: ->
-    room_count = 2 + @difficulty
-    room_scale = (@difficulty + 1) / (@difficulty + 2)
+    room_count = 1 + @difficulty
+    room_scale = Math.max (-1/40)*@difficulty + 1, 0
 
     # design rooms
     rooms = []
