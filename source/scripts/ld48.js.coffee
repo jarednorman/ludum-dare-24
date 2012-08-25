@@ -69,9 +69,38 @@ class Level
         for x in [room.x..(room.x + room.w - 1)]
           @map[y][x].removeWall()
 
-    console.log rooms
-
     # connect rooms
+    connected = []
+    for source in rooms
+      for destination in rooms
+        already_connected = false
+        for path in connected
+          already_connected = true if (path[0] == source) and (path[1] == destination)
+          already_connected = true if (path[1] == source) and (path[0] == destination)
+        if not ((source == destination) or already_connected)
+          source_x = Math.floor source.x + source.w/2
+          source_y = Math.floor source.y + source.h/2
+
+          target_x = Math.floor destination.x + destination.w/2
+          target_y = Math.floor destination.y + destination.h/2
+
+          current_x = source_x
+          current_y = source_y
+
+          while current_x != target_x or current_y != target_y
+            x = if current_x < target_x then 1 else -1
+            y = if current_y < target_y then 1 else -1
+            dx = Math.abs(current_x - target_x)
+            dy = Math.abs(current_y - target_y)
+            if Math.random() < dx / (dx + dy)
+              current_x = current_x + x
+            else
+              current_y = current_y + y
+            if current_y > 1 and current_y < WORLD_HEIGHT - 2 and current_x > 1 and current_x < WORLD_WIDTH - 2
+              @map[current_y][current_x].removeWall() 
+
+          connected.push [source, destination]
+
 
   getChar: (y, x) ->
     @map[y][x].getChar()
