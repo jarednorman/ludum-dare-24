@@ -15,7 +15,6 @@ class Thing
       x = Math.floor Math.random() * WORLD_WIDTH
       y = Math.floor Math.random() * WORLD_HEIGHT
       if @level.isEmpty(y, x)
-        console.log y, x
         @place(y, x)
         break
 
@@ -72,7 +71,7 @@ class LevelTile
     @is_wall
 
   isEmpty: ->
-    @contents.length == 0 or (not @isWall())
+    @contents.length == 0 and (not @isWall())
 
 class Level
 
@@ -208,6 +207,8 @@ class LDView extends Backbone.View
     @mapView = new MapView @current_level
     @player = new Player @current_level
     @mapView.render()
+
+    # setup controls
 
   initializeHelp: ->
     @help_button.click =>
