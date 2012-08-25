@@ -2,26 +2,30 @@
 
 @import 'compass';
 @import 'compass/reset';
-@import url(http://fonts.googleapis.com/css?family=Press+Start+2P);
+@import url(http://fonts.googleapis.com/css?family=PT+Mono);
 
 $other-blue: #c6ffed;
+$light-other-blue: $other-blue * 0.97;
 $blue: #4b92ff;
 $orange: #ff8159;
 $white: #fbfcff;
+$purple: #9b8eca;
+$black: #372435;
 
 body {
-  background-color: $other-blue;
-  font-family: "Press Start 2P", monospace;
-  font-size: 14px;
-  line-height: 18px;
+  background-color: $light-other-blue;
+  color: $black;
+  font-family: "PT Mono", monospace;
+  font-size: 18px;
 }
 
 #page-wrap {
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  bottom: 0px;
-  left: 0px;
+  position: relative;
+  width: 1000px;
+  height: 700px;
+  margin: 0px auto;
+
+  background-color: $other-blue;
 
   #title {
     position: absolute;
@@ -51,12 +55,58 @@ body {
   }
 
   #game-area {
+    display: inline-block;
+    padding: 12px;
+    position: absolute;
+    left: 30px;
+    top: 75px;
+
+    font-size: 30px;
+    background-color: $orange;
+    @include border-radius(10px);
+
+    p {
+
+      span {
+        white-space: pre;
+      }
+    }
   }
 
   #buttons {
+    position: absolute;
+    top: 70px;
+    right: 20px;
+    width: 300px;
+    padding: 0px;
+
+    background-color: $purple;
+    @include border-radius(8px);
+
+    .button {
+      display: inline-block;
+      margin: 8px;
+      padding: 8px;
+
+      background-color: $white;
+      @include border-radius(8px);
+    }
   }
 
   #log {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 300px - 16px;
+    padding: 8px;
+
+    @include border-radius(8px);
+    background-color: $blue;
+    color: $white;
+
+    p {
+      margin-bottom: 10px;
+    }
   }
 
   #help-button {
