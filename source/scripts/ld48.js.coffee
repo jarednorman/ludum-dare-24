@@ -14,6 +14,10 @@ class Thing
     @event_function = null
     @event_arg = null
 
+  moveToLevel: (level) ->
+    @level = level
+    @randomlyPlace()
+
   randomlyPlace: ->
     while true
       x = Math.floor Math.random() * WORLD_WIDTH
@@ -41,6 +45,18 @@ class Thing
   setEvent: (f, arg) ->
     @event_function = f
     @event_arg = arg
+
+  getActions: ->
+    []
+
+class LevelEnd extends Thing
+
+  char: 'T'
+
+  description: 'This is a teledeporter that takes you to the next level.'
+
+  constructor: (@level) ->
+    super(@level)
 
 class LivingThing extends Thing
     
@@ -74,6 +90,17 @@ class Player extends LivingThing
   constructor: (@level) ->
     super(@level)
 
+  getActions: ->
+    actions = []
+    actions.push
+      description: 'Commit suicide.'
+      f: =>
+        @health = 0
+        log.print "You have died."
+      args: {}
+    actions
+    
+
 class LevelTile
 
   constructor: (@y, @x, @level) ->
@@ -97,7 +124,7 @@ class LevelTile
       return @level.map[y][x]
 
   getActions: ->
-    if @isEmpty()
+    if @isEmpty() or @isWall()
       noop =
         description: "do nothing"
         f: ->
@@ -105,7 +132,8 @@ class LevelTile
         arg: {}
       [noop]
     else
-      []
+      return @contents[0].getActions()
+      
 
   makeWall: ->
     @is_wall = true
@@ -162,6 +190,7 @@ class Level
   minimumRoomSize: 5
 
   constructor: (@difficulty) ->
+    @isComplete = false
     @map = do =>
       map = []
       for y in [0..WORLD_HEIGHT - 1]
@@ -249,6 +278,7 @@ class MapView extends Backbone.View
   el: ($ '#game-area')
 
   initialize: (@level) ->
+    @$el.empty()
     for y in [0..WORLD_HEIGHT - 1]
       row = ($ '<p>').attr('id', y.toString())
       for x in [0..WORLD_WIDTH - 1]
@@ -294,6 +324,13 @@ class LDView extends Backbone.View
 
   el: ($ '#page-wrap')
 
+  nextLevel: =>
+    @difficulty = @difficulty + 1
+    @current_level = new Level @difficulty
+    @mapView = new MapView @current_level
+    @player.moveToLevel @current_level
+    @mapView.render()
+
   initialize: ->
     @difficulty = 0
     @current_level = new Level @difficulty
@@ -312,20 +349,16 @@ class LDView extends Backbone.View
         switch key
           when 'w'
             @player.setEvent @player.move, { x:  0, y: -1 }
-            @unselect()
-            @current_level.update()
+            @update()
           when 'a'
             @player.setEvent @player.move, { x: -1, y:  0 }
-            @unselect()
-            @current_level.update()
+            @update()
           when 's'
             @player.setEvent @player.move, { x:  0, y:  1 }
-            @unselect()
-            @current_level.update()
+            @update()
           when 'd'
             @player.setEvent @player.move, { x:  1, y:  0 }
-            @unselect()
-            @current_level.update()
+            @update()
 
         @mapView.render()
 
@@ -335,8 +368,7 @@ class LDView extends Backbone.View
           @select(target) 
         if target.is '.button'
           @actionsView.doAction target.text()
-          @unselect()
-          @current_level.update()
+          @update()
         else if target.is '#help-button'
           ($ '#help').css { display: 'block' }
         else if target.is '#help'
@@ -356,6 +388,12 @@ class LDView extends Backbone.View
 
   render: ->
 
+  update: ->
+    @unselect()
+    if @current_level.is_complete
+      @nextLevel()
+    else
+      @current_level.update()
 
 $ ->
   game = new LDView
