@@ -9,6 +9,8 @@ class Thing
 
   constructor: (@level) ->
     @randomlyPlace()
+    @event_function = null
+    @event_arg = null
 
   randomlyPlace: ->
     while true
@@ -25,6 +27,19 @@ class Thing
   getChar: ->
     @char
 
+  update: ->
+    @doEvent()
+  
+  doEvent: ->
+    if @event_function?
+      @event_function @event_arg
+      @event_function = null
+      @event_arg = null
+
+  setEvent: (f, arg) ->
+    @event_function = f
+    @event_arg = arg
+
 class LivingThing extends Thing
     
   char: 'o'
@@ -38,6 +53,14 @@ class LivingThing extends Thing
   notDead: ->
     @health > 0
 
+  move: (dir) ->
+    x = dir.x
+    y = dir.y
+    destination = @tile.getRelativeTile(y, x)
+    if destination? and destination.isEmpty()
+      @tile.contents = []
+      @place(destination.y, destination.x)
+
 class Player extends LivingThing
 
   char: '@'
@@ -49,7 +72,7 @@ class Player extends LivingThing
 
 class LevelTile
 
-  constructor: ->
+  constructor: (@y, @x, @level) ->
     @contents = []
     @is_wall = true;
 
@@ -60,6 +83,15 @@ class LevelTile
       @contents[0].getChar()
     else
       '.'
+
+  getRelativeTile: (y, x) ->
+    x = @x + x
+    y = @y + y
+    if y < 0 or y > WORLD_HEIGHT - 1 or x < 0 or x > WORLD_WIDTH - 1
+      return null
+    else
+      return @level.map[y][x]
+
 
   makeWall: ->
     @is_wall = true
@@ -78,21 +110,21 @@ class Level
   minimumRoomSize: 5
 
   constructor: (@difficulty) ->
-    @map = do ->
+    @map = do =>
       map = []
       for y in [0..WORLD_HEIGHT - 1]
         row = []
         for x in [0..WORLD_WIDTH - 1]
-          row[x] = new LevelTile
+          row[x] = new LevelTile y, x, this
         map[y] = row
       map
 
     @generateSpaces()
 
-  updateEverything: ->
+  update: ->
     for row in @map
       for cell in row
-        thing.update for thing in cell.contents
+        thing.update() for thing in cell.contents
 
   generateSpaces: ->
     room_count = 1 + @difficulty
@@ -209,6 +241,26 @@ class LDView extends Backbone.View
     @mapView.render()
 
     # setup controls
+
+    $(document.body).on
+      keypress: (event) =>
+        key = String.fromCharCode event.charCode
+        switch key
+          when 'w'
+            @player.setEvent @player.move, { x:  0, y: -1 }
+            @current_level.update()
+          when 'a'
+            @player.setEvent @player.move, { x: -1, y:  0 }
+            @current_level.update()
+          when 's'
+            @player.setEvent @player.move, { x:  0, y:  1 }
+            @current_level.update()
+          when 'd'
+            @player.setEvent @player.move, { x:  1, y:  0 }
+            @current_level.update()
+        @mapView.render()
+      click: (event) =>
+        console.log event
 
   initializeHelp: ->
     @help_button.click =>
