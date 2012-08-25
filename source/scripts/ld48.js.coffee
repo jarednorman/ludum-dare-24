@@ -139,6 +139,7 @@ class ActionsView extends Backbone.View
     @render()
 
   doAction: (text) ->
+    console.log text
 
 class Level
 
@@ -281,32 +282,42 @@ class LDView extends Backbone.View
         switch key
           when 'w'
             @player.setEvent @player.move, { x:  0, y: -1 }
+            @unselect()
             @current_level.update()
           when 'a'
             @player.setEvent @player.move, { x: -1, y:  0 }
+            @unselect()
             @current_level.update()
           when 's'
             @player.setEvent @player.move, { x:  0, y:  1 }
+            @unselect()
             @current_level.update()
           when 'd'
             @player.setEvent @player.move, { x:  1, y:  0 }
+            @unselect()
             @current_level.update()
         @mapView.render()
       click: (event) =>
         target = ($ event.target)
         if target.is 'p span'
           @select(target) 
+        if target.is '.button'
+          @actionsView.doAction target.text()
         else if target.is '#help-button'
           ($ '#help').css { display: 'block' }
         else if target.is '#help'
           target.css { display: 'none' }
 
-  select: (target) ->
+  select: (target) =>
     x = target.attr('id')
     y = target.parent().attr('id')
     ($ '#game-area span').removeClass 'active'
     target.addClass 'active'
     @actionsView.setActions @current_level.map[y][x].getActions()
+
+  unselect: ->
+    ($ '#game-area span').removeClass 'active'
+    @actionsView.setActions []
 
   render: ->
 
