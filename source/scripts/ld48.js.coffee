@@ -7,6 +7,8 @@ class Thing
 
   char: '?'
 
+  description: "This is a thing."
+
   constructor: (@level) ->
     @randomlyPlace()
     @event_function = null
@@ -65,6 +67,8 @@ class Player extends LivingThing
 
   char: '@'
 
+  description: "This is you, the player."
+
   maxHealth: 5
 
   constructor: (@level) ->
@@ -97,6 +101,7 @@ class LevelTile
       noop =
         description: "do nothing"
         f: ->
+          log.print "You did nothing."
         arg: {}
       [noop]
     else
@@ -113,6 +118,14 @@ class LevelTile
 
   isEmpty: ->
     @contents.length == 0 and (not @isWall())
+
+  getDescription: ->
+    if @contents.length > 0
+      @contents[0].description
+    else if @isWall()
+      "This is a wall."
+    else
+      "This is an empty tile."
 
 class ActionsView extends Backbone.View
 
@@ -139,7 +152,10 @@ class ActionsView extends Backbone.View
     @render()
 
   doAction: (text) ->
-    console.log text
+    for action in @actions
+      if action.description == text
+        action.f action.arg
+        break
 
 class Level
 
@@ -259,6 +275,20 @@ class MapView extends Backbone.View
         char = @level.getChar(y, x)
         cell.text(char) if cell.text() != char
 
+class LogView extends Backbone.View
+
+  el: ($ '#log')
+
+  initialize: ->
+    @$el.empty()
+
+  print: (message) ->
+    p = ($ '<p>').text message
+    @$el.append p
+    while @$el.children().length > 12
+      @$el.children().first().remove()
+
+log = new LogView
 
 class LDView extends Backbone.View
 
@@ -296,13 +326,17 @@ class LDView extends Backbone.View
             @player.setEvent @player.move, { x:  1, y:  0 }
             @unselect()
             @current_level.update()
+
         @mapView.render()
+
       click: (event) =>
         target = ($ event.target)
         if target.is 'p span'
           @select(target) 
         if target.is '.button'
           @actionsView.doAction target.text()
+          @unselect()
+          @current_level.update()
         else if target.is '#help-button'
           ($ '#help').css { display: 'block' }
         else if target.is '#help'
@@ -314,6 +348,7 @@ class LDView extends Backbone.View
     ($ '#game-area span').removeClass 'active'
     target.addClass 'active'
     @actionsView.setActions @current_level.map[y][x].getActions()
+    log.print @current_level.map[y][x].getDescription()
 
   unselect: ->
     ($ '#game-area span').removeClass 'active'
