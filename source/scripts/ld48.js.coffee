@@ -90,7 +90,7 @@ class Level
 
     @generateSpaces()
 
-  @updateEverything: ->
+  updateEverything: ->
     for row in @map
       for cell in row
         thing.update for thing in cell.contents
