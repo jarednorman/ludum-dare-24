@@ -58,6 +58,17 @@ class LevelEnd extends Thing
   constructor: (@level) ->
     super(@level)
 
+  getActions: ->
+    actions = []
+    if @level.distanceFromPlayer(@tile.y, @tile.x) == 1
+      actions.push
+        description: "Go to next level."
+        f: =>
+          @level.is_complete = true
+          log.print "You've moved to the next level."
+        args: {}
+    actions
+
 class LivingThing extends Thing
     
   char: 'o'
@@ -202,10 +213,17 @@ class Level
 
     @generateSpaces()
 
+    exit = new LevelEnd this
+
   update: ->
     for row in @map
       for cell in row
         thing.update() for thing in cell.contents
+
+  distanceFromPlayer: (y, x) ->
+    dx = Math.abs x - @player.tile.x
+    dy = Math.abs y - @player.tile.y
+    dx + dy
 
   generateSpaces: ->
     room_count = 1 + @difficulty
@@ -326,6 +344,7 @@ class LDView extends Backbone.View
   nextLevel: =>
     @difficulty = @difficulty + 1
     @current_level = new Level @difficulty
+    @current_level.player = @player
     @mapView = new MapView @current_level
     @player.moveToLevel @current_level
     @mapView.render()
@@ -336,6 +355,7 @@ class LDView extends Backbone.View
 
     @mapView = new MapView @current_level
     @player = new Player @current_level
+    @current_level.player = @player
     @mapView.render()
 
     @actionsView = new ActionsView
