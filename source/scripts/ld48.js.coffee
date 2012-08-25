@@ -72,7 +72,7 @@ class LevelTile
     @is_wall
 
   isEmpty: ->
-    @contents.length == 0 and (not @isWall())
+    @contents.length == 0 or (not @isWall())
 
 class Level
 
