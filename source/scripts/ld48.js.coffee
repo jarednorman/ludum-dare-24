@@ -90,6 +90,11 @@ class Level
 
     @generateSpaces()
 
+  @updateEverything: ->
+    for row in @map
+      for cell in row
+        thing.update for thing in cell.contents
+
   generateSpaces: ->
     room_count = 1 + @difficulty
     room_scale = Math.max (-1/40)*@difficulty + 1, 0
