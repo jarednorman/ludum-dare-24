@@ -29,8 +29,9 @@ class LevelTile
 
 class Level
 
-  constructor: (difficulty) ->
-    console.log "making a level with difficulty: #{difficulty}"
+  minimumRoomSize: 5
+
+  constructor: (@difficulty) ->
     @map = do ->
       map = []
       for y in [0..WORLD_HEIGHT - 1]
@@ -40,7 +41,37 @@ class Level
         map[y] = row
       map
 
+    @generateSpaces()
+
   generateSpaces: ->
+    room_count = 2 + @difficulty
+    room_scale = (@difficulty + 1) / (@difficulty + 2)
+
+    # design rooms
+    rooms = []
+
+    for i in [0..room_count - 1]
+      room =
+        x: 1 + Math.floor Math.random() * (WORLD_WIDTH - @minimumRoomSize - 1)
+        y: 1 + Math.floor Math.random() * (WORLD_HEIGHT - @minimumRoomSize - 1)
+
+      max_width = WORLD_WIDTH - room.x - 1
+      max_height = WORLD_HEIGHT - room.y - 1
+
+      room.w = @minimumRoomSize + Math.floor Math.random() * (max_width - @minimumRoomSize - 1) * room_scale
+      room.h = @minimumRoomSize + Math.floor Math.random() * (max_height - @minimumRoomSize - 1) * room_scale
+
+      rooms[i] = room
+
+    # clear rooms
+    for room in rooms
+      for y in [room.y..(room.y + room.h - 1)]
+        for x in [room.x..(room.x + room.w - 1)]
+          @map[y][x].removeWall()
+
+    console.log rooms
+
+    # connect rooms
 
   getChar: (y, x) ->
     @map[y][x].getChar()
