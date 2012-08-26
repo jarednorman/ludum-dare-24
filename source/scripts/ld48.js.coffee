@@ -181,7 +181,7 @@ class Player extends LivingThing
     @has_push = false
     @has_sword = false
     @has_lightning = false
-    @has_summon_wall = false
+    @has_summon_wall = true
 
   hurt: (damage) ->
     super(damage)
@@ -236,13 +236,21 @@ class LevelTile
       return @level.map[y][x]
 
   getActions: ->
-    if @isEmpty() or @isWall()
+    if @isWall()
       noop =
         description: "do nothing"
         f: ->
           log.print "You did nothing."
         arg: {}
       [noop]
+    else if @isEmpty()
+      if @level.player.has_summon_wall
+        summon_wall =
+          description: "summon wall"
+          f: (arg) ->
+            arg.tile.makeWall() if arg.tile.isEmpty()
+          arg: { tile: this }
+        [summon_wall]
     else
       return @contents[0].getActions()
       
