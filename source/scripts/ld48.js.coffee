@@ -300,7 +300,7 @@ class Player extends LivingThing
     @has_heal = false
     @has_sword = false
     @has_lightning = false
-    @has_summon_wall = true
+    @has_summon_wall = false
 
   addAbility: ->
     score += 1000
