@@ -1,9 +1,20 @@
 #page-wrap
+  | <div id="fb-root"></div>
+  | <script>(function(d, s, id) {
+  | var js, fjs = d.getElementsByTagName(s)[0];
+  | if (d.getElementById(id)) return;
+  | js = d.createElement(s); js.id = id;
+  | js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=141565635978112";
+  | fjs.parentNode.insertBefore(js, fjs);
+  | }(document, 'script', 'facebook-jssdk'));</script>
   #title
     h1
       a href="/" A really hard roguelike by Jared Norman
 
   #share
+    | <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://ld24.jarednorman.ca" data-text="Check out @jaredrnorman's #LD48 Game competition entry!" data-size="large">Tweet</a>
+    | <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    | <div class="fb-like" data-href="http://ld24.jarednorman.ca" data-send="false" data-width="450" data-show-faces="true" data-colorscheme="dark" data-font="arial"></div>
 
   #game-area
 
