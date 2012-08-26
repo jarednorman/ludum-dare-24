@@ -27,6 +27,8 @@ class Thing
         break
 
   place: (y, x) ->
+    if @tile?
+      @tile.contents = []
     @tile = @level.map[y][x]
     @tile.contents.push this
 
@@ -88,13 +90,14 @@ class LivingThing extends Thing
 
   destroy: ->
     @tile.contents = []
+    if @score?
+      score += @score
 
   move: (dir) ->
     x = dir.x
     y = dir.y
     destination = @tile.getRelativeTile(y, x)
     if destination? and destination.isEmpty()
-      @tile.contents = []
       @place(destination.y, destination.x)
 
 class Enemy extends LivingThing
@@ -103,6 +106,8 @@ class Enemy extends LivingThing
   attackText: "The enemy uses its laser eyes to hurt you."
   attackDamage: 1
   attackRange: 1
+
+  score: 100
 
   attack: (arg) =>
     target = arg.what
@@ -119,6 +124,7 @@ class Enemy extends LivingThing
       @setEvent @move, { x:  0, y:  1 }
     else
       @setEvent @move, { x:  1, y:  0 }
+      
     if @tile.level.distanceFromPlayer(@tile.y, @tile.x) <= @attackRange
       @setEvent @attack, { what: @tile.level.player }
 
@@ -291,9 +297,14 @@ class Level
       new GiantPotato this
 
   update: ->
+    updated = []
     for row in @map
       for cell in row
-        thing.update() for thing in cell.contents
+        for thing in cell.contents
+          if not (thing in updated)
+            thing.update() 
+            updated.push thing
+
 
   distanceFromPlayer: (y, x) ->
     dx = Math.abs x - @player.tile.x
@@ -491,9 +502,11 @@ class LDView extends Backbone.View
       @current_level.update()
     @mapView.render()
     if not @player.notDead()
+      ($ '#game-over #score').text score
       ($ '#game-over').css { display: 'block' }
       @game_over = true
 
+score = 0
 
 $ ->
   game = new LDView
