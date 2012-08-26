@@ -172,7 +172,7 @@ class Player extends LivingThing
     @has_phase = false
     @has_sword = false
     @has_lightning = false
-    @has_wall = false
+    @has_summon_wall = false
 
   hurt: (damage) ->
     super(damage)
