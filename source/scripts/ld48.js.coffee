@@ -68,6 +68,7 @@ class LevelEnd extends Thing
         f: =>
           @level.is_complete = true
           log.print "You've moved to the next level."
+          @level.player.addAbility()
         args: {}
     actions
 
@@ -182,6 +183,40 @@ class Player extends LivingThing
     @has_sword = false
     @has_lightning = false
     @has_summon_wall = true
+
+  addAbility: ->
+    while true
+      r = Math.random()
+      if r < 1/6
+        if not @has_teleport
+          @has_teleport = true
+          log.print "You've evolved the ability to teleport yourself, and enemies to a random location. Click on what you want to teleport to access the ability."
+          break
+      else if r < 2/6
+        if not @has_heal
+          @has_heal= true
+          log.print "You've evolved the ability to heal yourself for 1 point of health. Click on yourself to access that ability."
+          break
+      else if r < 3/6
+        if not @has_push
+          @has_push = true
+          log.print "You've evolved the ability to push enemies back with your mind. Click on enemies with 3 tiles of you to access the ability."
+          break
+      else if r < 4/6
+        if not @has_sword
+          @has_sword = true
+          log.print "You've evolved your left hand into a sword. You can now slash enemies, dealing 3 damage to them. Click on enemies adjacent to you to access the ability."
+          break
+      else if r < 5/6
+        if not @has_lightning
+          @has_lightning = true
+          log.print "You've evolved the ability to shoot lightning from your ears, dealing 2 damage to enemies. Click on enemies within two tiles of you to access this ability."
+          break
+      else
+        if not @has_summon_wall
+          @has_summon_wall = true
+          log.print "You've evolved the ability to create walls with your mind. Click on an empty tile to access the ability."
+          break
 
   hurt: (damage) ->
     super(damage)
