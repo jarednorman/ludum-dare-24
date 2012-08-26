@@ -90,6 +90,20 @@ class LivingThing extends Thing
       @tile.contents = []
       @place(destination.y, destination.x)
 
+class Enemy extends LivingThing
+
+class GiantPotato extends Enemy
+
+  char: 'P'
+
+  description: 'This is a giant monster potato with red glowing eyes and a shark-like mouth full of sharp teeth.'
+
+  maxHealth: 2
+
+  getActions: ->
+    actions = []
+    actions
+
 class Player extends LivingThing
 
   char: '@'
@@ -214,6 +228,12 @@ class Level
     @generateSpaces()
 
     exit = new LevelEnd this
+
+    @addEnemies()
+
+  addEnemies: ->
+    for n in [0..@difficulty*@difficulty]
+      new GiantPotato this
 
   update: ->
     for row in @map
