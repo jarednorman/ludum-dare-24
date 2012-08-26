@@ -146,10 +146,10 @@ class GiantPotato extends Enemy
 
   char: 'P'
   name: 'giant potato'
-  description: 'This is a giant monster potato with red glowing eyes and a shark-like mouth full of sharp teeth.'
+  description: 'This is a giant monster potato with red glowing eyes and a shark-like mouth full of sharp teeth. It has a range 1 attack that does 1 damage.'
 
-  attackText: "The giant potato shoots tiny flaming chairs at you."
-  attackRange: 2
+  attackText: "The giant potato claws at you."
+  attackRange: 1
 
   maxHealth: 1
 
@@ -166,6 +166,13 @@ class Player extends LivingThing
 
   constructor: (@level) ->
     super(@level)
+    @has_teleport = false
+    @has_heal = false
+    @has_push = false
+    @has_phase = false
+    @has_sword = false
+    @has_lightning = false
+    @has_wall = false
 
   hurt: (damage) ->
     super(damage)
