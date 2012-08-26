@@ -236,7 +236,17 @@ class Player extends LivingThing
       actions.push
         description: "Randomly teleport yourself."
         f: @randomlyPlace
-        arg: { }
+        arg: {}
+    if @tile.level.player.has_heal
+      actions.push
+        description: "Heal 1 point of health."
+        f: =>
+          @health = Math.min @health + 1, @maxHealth
+          log.print "You now have #{@health} health."
+          if @health == @maxHealth
+            log.print "You are at maximum health."
+        arg: {}
+          
     actions
 
   sword: (arg) ->
