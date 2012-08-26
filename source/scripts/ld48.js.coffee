@@ -214,7 +214,42 @@ class MechSpider extends SmartEnemy
 
   maxHealth: 1
 
+class DarkWizard extends SmartEnemy
 
+  char: 'D'
+  name: 'dark wizard'
+  description: 'This is a powerful dark wizard, capable of shooting antimatter bolts from range 5 that deal 3 damage.'
+  score: 1000
+
+  attackText: 'The dark wizards fires an antimatter bolt at you.'
+  attackRange: 5
+  attackDamage: 3
+
+  maxHealth: 5
+
+
+class DarkKnight extends SmartEnemy
+
+  char: 'N'
+  name: 'dark knight'
+  description: 'This is a powerful dark knight, with a huge glowing sword that deals 5 damage.'
+  score: 1000
+
+  attackText: 'The dark knight hits you with his huge glowing sword.'
+  attackDamage: 5
+
+  maxHealth: 5
+
+class EvilEnergyBall extends Enemy
+
+  char: 'b'
+  name: 'evil ball of evergy'
+  description: 'This is a floating evil ball of energy that shoots tiny flaming sandwiches at range 2 that do 2 damage.'
+  score: 400
+
+  attackText: 'The evil ball of energy shoots flaming sandwiches at you.'
+  attackRange: 2
+  attackDamage: 2
 
 
 class GhostRobot extends Enemy
@@ -453,7 +488,7 @@ class Level
 
   addEnemies: ->
     enemy_count = (@difficulty + 2) * (@difficulty + 1)
-    enemies = [ GiantPotato, GhostRobot, Kobold, IceWolf, MechSpider ]
+    enemies = [ GiantPotato, GhostRobot, Kobold, IceWolf, MechSpider, EvilEnergyBall, DarkWizard, DarkKnight ]
     while enemy_count > 0
       r = Math.random()
       if r < 1/enemies.length
@@ -471,6 +506,15 @@ class Level
       else if r < 5/enemies.length
         new MechSpider this
         enemy_count -= 4
+      else if r < 6/enemies.length
+        new EvilEnergyBall this
+        enemy_count -= 4
+      else if r < 7/enemies.length
+        new DarkWizard this
+        enemy_count -= 8
+      else if r < 8/enemies.length
+        new DarkKnight this
+        enemy_count -= 8
 
 
   update: ->
