@@ -127,10 +127,11 @@ class Enemy extends LivingThing
     actions = []
     # code possible player attacks abilities into here
     # sweet design, jared, you suck
-    actions.push
-      description: "Shoot it with a fireball."
-      f: @tile.level.player.fireball
-      arg: { what: this }
+    if @tile.level.distanceFromPlayer(@tile.y, @tile.x) <= 3
+      actions.push
+        description: "Shoot it with a fireball."
+        f: @tile.level.player.fireball
+        arg: { what: this }
     actions
 
 
