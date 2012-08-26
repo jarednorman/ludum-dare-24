@@ -99,6 +99,7 @@ class LivingThing extends Thing
 
 class Enemy extends LivingThing
 
+  name: "enemy"
   attackText: "The enemy uses its laser eyes to hurt you."
   attackDamage: 1
   attackRange: 1
@@ -138,7 +139,7 @@ class Enemy extends LivingThing
 class GiantPotato extends Enemy
 
   char: 'P'
-
+  name: 'giant potato'
   description: 'This is a giant monster potato with red glowing eyes and a shark-like mouth full of sharp teeth.'
 
   attackText: "The giant potato shoots tiny flaming chairs at you."
@@ -175,8 +176,9 @@ class Player extends LivingThing
     actions
 
   fireball: (arg) ->
-    log.print "You shoot a fireball the #{arg.what.name}."
+    log.print "You shoot a fireball at the #{arg.what.name} doing 1 damage."
     arg.what.hurt(1)
+    log.print "The #{arg.what.name} dies." if not arg.what.notDead()
     
 
 class LevelTile
