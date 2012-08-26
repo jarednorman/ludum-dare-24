@@ -177,15 +177,44 @@ class SmartEnemy extends Enemy
     if @tile.level.distanceFromPlayer(@tile.y, @tile.x) <= @attackRange
       @setEvent @attack, { what: @tile.level.player }
 
-    super()
+    @doEvent()
 
 class Kobold extends SmartEnemy
 
   char: 'k'
   name: 'kobold'
   description: 'This is a kobold with a dagger that deals 1 damage.'
+  score: 200
 
   attackText: 'The kobold slices you with its dagger.'
+
+
+class IceWolf extends SmartEnemy
+
+  char: 'w'
+  name: 'ice wolf'
+  description: 'This is a large ice wolf with sharp teeth and a bite that deals 2 damage.'
+  score: 300
+
+  attackText: 'The ice wolf bites you.'
+  attackDamage: 2
+
+  maxHealth: 2
+
+
+class MechSpider extends SmartEnemy
+
+  char: 's'
+  name: 'mech spider'
+  description: 'This is a mechanical spider-robot with a plasma blaster mounted on it with range 4 that deals 1 damage.'
+  score: 500
+
+  attackText: 'The mech spider fires its plasma blaster at you.'
+  attackRange: 4
+
+  maxHealth: 1
+
+
 
 
 class GhostRobot extends Enemy
@@ -193,6 +222,7 @@ class GhostRobot extends Enemy
   char: 'g'
   name: 'ghost robot'
   description: 'This is the ghost of a viscious, human-hating robot, armed with range 2 lasers that do 1 damage.'
+  score: 200
 
   attackText: "The ghost robot shoots its lasers at you."
   attackRange: 2
@@ -205,6 +235,7 @@ class GiantPotato extends Enemy
   char: 'P'
   name: 'giant potato'
   description: 'This is a giant monster potato with red glowing eyes and a shark-like mouth full of sharp teeth. It has a range 1 attack that does 1 damage.'
+  score: 100
 
   attackText: "The giant potato claws at you."
   attackRange: 1
@@ -421,24 +452,25 @@ class Level
     @addEnemies()
 
   addEnemies: ->
-    enemies = (@difficulty + 2) * (@difficulty + 1)
-    while enemies > 0
+    enemy_count = (@difficulty + 2) * (@difficulty + 1)
+    enemies = [ GiantPotato, GhostRobot, Kobold, IceWolf, MechSpider ]
+    while enemy_count > 0
       r = Math.random()
-      if r < 0.2
+      if r < 1/enemies.length
         new GiantPotato this
-        enemies -= 1
-      else if r < 0.4
+        enemy_count -= 1
+      else if r < 2/enemies.length
         new GhostRobot this
-        enemies -= 2
-      else if r < 0.6
+        enemy_count -= 2
+      else if r < 3/enemies.length
         new Kobold this
-        enemies -= 2
-      else if r < 0.8
-        new GiantPotato this
-        enemies -= 1
-      else
-        new GiantPotato this
-        enemies -= 1
+        enemy_count -= 2
+      else if r < 4/enemies.length
+        new IceWolf this
+        enemy_count -= 3
+      else if r < 5/enemies.length
+        new MechSpider this
+        enemy_count -= 4
 
 
   update: ->
