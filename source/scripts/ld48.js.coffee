@@ -82,6 +82,13 @@ class LivingThing extends Thing
   notDead: ->
     @health > 0
 
+  hurt: (damage) ->
+    @health = Math.max @health - damage, 0
+    @destroy() if not @notDead()
+
+  destroy: ->
+    @tile.contents = []
+
   move: (dir) ->
     x = dir.x
     y = dir.y
@@ -92,17 +99,50 @@ class LivingThing extends Thing
 
 class Enemy extends LivingThing
 
+  attackText: "The enemy uses its laser eyes to hurt you."
+  attackDamage: 1
+  attackRange: 1
+
+  attack: (arg) =>
+    target = arg.what
+    log.print @attackText
+    target.hurt @attackDamage
+
+  update: ->
+    r = Math.random()
+    if r < 0.25
+      @setEvent @move, { x:  0, y: -1 }
+    else if r < 0.5
+      @setEvent @move, { x: -1, y:  0 }
+    else if r < 0.75
+      @setEvent @move, { x:  0, y:  1 }
+    else
+      @setEvent @move, { x:  1, y:  0 }
+    if @tile.level.distanceFromPlayer(@tile.y, @tile.x) <= @attackRange
+      @setEvent @attack, { what: @tile.level.player }
+
+    super()
+
+  getActions: ->
+    actions = []
+    # code possible player attacks abilities into here
+    # sweet design, jared, you suck
+    actions
+
+
 class GiantPotato extends Enemy
 
   char: 'P'
 
   description: 'This is a giant monster potato with red glowing eyes and a shark-like mouth full of sharp teeth.'
 
-  maxHealth: 2
+  attackText: "The giant potato shoots tiny flaming chairs at you."
+  attackRange: 2
 
-  getActions: ->
-    actions = []
-    actions
+  maxHealth: 1
+
+  update: ->
+    super()
 
 class Player extends LivingThing
 
@@ -110,10 +150,14 @@ class Player extends LivingThing
 
   description: "This is you, the player."
 
-  maxHealth: 5
+  maxHealth: 25
 
   constructor: (@level) ->
     super(@level)
+
+  hurt: (damage) ->
+    super(damage)
+    log.print "You take #{damage} damage. You have #{@health} health left."
 
   getActions: ->
     actions = []
