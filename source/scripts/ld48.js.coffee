@@ -293,8 +293,25 @@ class Level
     @addEnemies()
 
   addEnemies: ->
-    for n in [0..@difficulty*@difficulty]
-      new GiantPotato this
+    enemies = (@difficulty + 2) * (@difficulty + 1)
+    while enemies > 0
+      r = Math.random()
+      if r < 0.2
+        new GiantPotato this
+        enemies -= 1
+      else if r < 0.4
+        new GiantPotato this
+        enemies -= 1
+      else if r < 0.6
+        new GiantPotato this
+        enemies -= 1
+      else if r < 0.8
+        new GiantPotato this
+        enemies -= 1
+      else
+        new GiantPotato this
+        enemies -= 1
+
 
   update: ->
     updated = []
