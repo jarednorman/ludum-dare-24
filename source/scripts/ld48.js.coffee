@@ -522,6 +522,7 @@ class LDView extends Backbone.View
 
   nextLevel: =>
     @difficulty = @difficulty + 1
+    level += 1
     @current_level = new Level @difficulty
     @current_level.player = @player
     @mapView = new MapView @current_level
@@ -596,10 +597,12 @@ class LDView extends Backbone.View
     @mapView.render()
     if not @player.notDead()
       ($ '#game-over #score').text score
+      ($ '#game-over #level').text level
       ($ '#game-over').css { display: 'block' }
       @game_over = true
 
 score = 0
+level = 1
 
 $ ->
   game = new LDView
