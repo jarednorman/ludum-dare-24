@@ -51,7 +51,7 @@ class Thing
 
 class LevelEnd extends Thing
 
-  char: 'T'
+  char: '&'
 
   description: 'This is a teledeporter that takes you to the next level.'
 
@@ -127,6 +127,10 @@ class Enemy extends LivingThing
     actions = []
     # code possible player attacks abilities into here
     # sweet design, jared, you suck
+    actions.push
+      description: "Shoot it with a fireball."
+      f: @tile.level.player.fireball
+      arg: { what: this }
     actions
 
 
@@ -168,6 +172,10 @@ class Player extends LivingThing
         log.print "You have died."
       args: {}
     actions
+
+  fireball: (arg) ->
+    log.print "You shoot a fireball the #{arg.what.name}."
+    arg.what.hurt(1)
     
 
 class LevelTile
@@ -477,6 +485,7 @@ class LDView extends Backbone.View
       @nextLevel()
     else
       @current_level.update()
+    @mapView.render()
 
 $ ->
   game = new LDView
