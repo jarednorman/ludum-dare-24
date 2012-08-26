@@ -157,15 +157,45 @@ class Enemy extends LivingThing
         arg: { }
     actions
 
+class SmartEnemy extends Enemy
+
+  update: ->
+    px = @tile.level.player.tile.x
+    py = @tile.level.player.tile.y
+    x = @tile.x
+    y = @tile.y
+
+    if y > py
+      @setEvent @move, { x:  0, y: -1 }
+    else if x > px
+      @setEvent @move, { x: -1, y:  0 }
+    else if y < py
+      @setEvent @move, { x:  0, y:  1 }
+    else if x < px
+      @setEvent @move, { x:  1, y:  0 }
+      
+    if @tile.level.distanceFromPlayer(@tile.y, @tile.x) <= @attackRange
+      @setEvent @attack, { what: @tile.level.player }
+
+    super()
+
+class Kobold extends SmartEnemy
+
+  char: 'k'
+  name: 'kobold'
+  description: 'This is a kobold with a dagger that deals 1 damage.'
+
+  attackText: 'The kobold slices you with its dagger.'
+
 
 class GhostRobot extends Enemy
 
   char: 'g'
   name: 'ghost robot'
-  description: 'This is the ghost of a viscious, human-hating robot, armed with range 3 lasers that do 1 damage.'
+  description: 'This is the ghost of a viscious, human-hating robot, armed with range 2 lasers that do 1 damage.'
 
   attackText: "The ghost robot shoots its lasers at you."
-  attackRange: 3
+  attackRange: 2
 
   maxHealth: 2
 
@@ -401,8 +431,8 @@ class Level
         new GhostRobot this
         enemies -= 2
       else if r < 0.6
-        new GiantPotato this
-        enemies -= 1
+        new Kobold this
+        enemies -= 2
       else if r < 0.8
         new GiantPotato this
         enemies -= 1
