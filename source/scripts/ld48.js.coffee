@@ -165,14 +165,20 @@ class SmartEnemy extends Enemy
     x = @tile.x
     y = @tile.y
 
-    if y > py
-      @setEvent @move, { x:  0, y: -1 }
-    else if x > px
-      @setEvent @move, { x: -1, y:  0 }
-    else if y < py
-      @setEvent @move, { x:  0, y:  1 }
-    else if x < px
-      @setEvent @move, { x:  1, y:  0 }
+    potential_moves = []
+
+    if y >= py
+      potential_moves.push [@move, { x:  0, y: -1 }]
+    if x >= px
+      potential_moves.push [@move, { x: -1, y:  0 }]
+    if y <= py
+      potential_moves.push [@move, { x:  0, y:  1 }]
+    if x <= px
+      potential_moves.push [@move, { x:  1, y:  0 }]
+
+    move = potential_moves[Math.floor(Math.random()*potential_moves.length)]
+    @setEvent move[0], move[1]
+
       
     if @tile.level.distanceFromPlayer(@tile.y, @tile.x) <= @attackRange
       @setEvent @attack, { what: @tile.level.player }
