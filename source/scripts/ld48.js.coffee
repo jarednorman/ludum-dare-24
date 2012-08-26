@@ -139,6 +139,16 @@ class Enemy extends LivingThing
         description: "Shoot it with a fireball."
         f: @tile.level.player.fireball
         arg: { what: this }
+    if @tile.level.distanceFromPlayer(@tile.y, @tile.x) <= 2 and @tile.level.player.has_lightning
+      actions.push
+        description: "Shoot it with a bolt of lightning."
+        f: @tile.level.player.lightning
+        arg: { what: this }
+    if @tile.level.distanceFromPlayer(@tile.y, @tile.x) <= 1 and @tile.level.player.has_sword
+      actions.push
+        description: "Slash it with your sword."
+        f: @tile.level.player.sword
+        arg: { what: this }
     actions
 
 
@@ -169,7 +179,6 @@ class Player extends LivingThing
     @has_teleport = false
     @has_heal = false
     @has_push = false
-    @has_phase = false
     @has_sword = false
     @has_lightning = false
     @has_summon_wall = false
@@ -187,9 +196,19 @@ class Player extends LivingThing
         log.print "You have died."
       args: {}
     actions
+    
+  sword: (arg) ->
+    log.print "You slash the #{arg.what.name} with your sword, doing 2 damage."
+    arg.what.hurt(3)
+    log.print "The #{arg.what.name} dies." if not arg.what.notDead()
+
+  lightning: (arg) ->
+    log.print "You shoot a bolt of rainbow-coloured lightning at the #{arg.what.name}, doing 2 damage."
+    arg.what.hurt(2)
+    log.print "The #{arg.what.name} dies." if not arg.what.notDead()
 
   fireball: (arg) ->
-    log.print "You shoot a fireball at the #{arg.what.name} doing 1 damage."
+    log.print "You shoot a fireball at the #{arg.what.name}, doing 1 damage."
     arg.what.hurt(1)
     log.print "The #{arg.what.name} dies." if not arg.what.notDead()
     
@@ -442,7 +461,7 @@ class LogView extends Backbone.View
   print: (message) ->
     p = ($ '<p>').text message
     @$el.append p
-    while @$el.children().length > 12
+    while @$el.children().length > 8
       @$el.children().first().remove()
 
 log = new LogView
