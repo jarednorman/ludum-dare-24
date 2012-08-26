@@ -35,8 +35,19 @@ body {
   color: $white;
   
   h1 {
+    font-size: 26px;
+  }
+
+  h2 {
+    font-size: 22px;
     margin-top: 20px;
-    font-size: 24px;
+  }
+
+  #close {
+    @include button;
+    margin: 14px;
+    position: relative;
+    top: 40px;
   }
 }
 
@@ -146,6 +157,7 @@ body {
 
   #help {
     @include overlay;
+    display: block;
   }
 
   #game-over {

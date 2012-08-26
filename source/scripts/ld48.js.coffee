@@ -698,8 +698,8 @@ class LDView extends Backbone.View
           @update()
         else if target.is '#help-button'
           ($ '#help').css { display: 'block' }
-        else if target.is '#help'
-          target.css { display: 'none' }
+        else if target.is('#help') or target.is('#close')
+          ($ '#help').css { display: 'none' }
 
   select: (target) =>
     x = target.attr('id')
