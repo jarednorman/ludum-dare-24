@@ -185,7 +185,10 @@ class Player extends LivingThing
     @has_summon_wall = true
 
   addAbility: ->
-    while true
+    score += 1000
+    x = 0
+    while x < 100
+      x += 1
       r = Math.random()
       if r < 1/6
         if not @has_teleport
