@@ -316,7 +316,7 @@ class Player extends LivingThing
       else if r < 2/5
         if not @has_heal
           @has_heal= true
-          log.print "You've evolved the ability to heal yourself for 1 point of health. Click on yourself to access that ability."
+          log.print "You've evolved the ability to heal yourself for 5 points of health. Click on yourself to access that ability."
           break
       else if r < 3/5
         if not @has_sword
@@ -353,9 +353,9 @@ class Player extends LivingThing
         arg: {}
     if @tile.level.player.has_heal
       actions.push
-        description: "Heal 1 point of health."
+        description: "Heal 5 points of health."
         f: =>
-          @health = Math.min @health + 1, @maxHealth
+          @health = Math.min @health + 5, @maxHealth
           log.print "You now have #{@health} health."
           if @health == @maxHealth
             log.print "You are at maximum health."
