@@ -158,6 +158,18 @@ class Enemy extends LivingThing
     actions
 
 
+class GhostRobot extends Enemy
+
+  char: 'g'
+  name: 'ghost robot'
+  description: 'This is the ghost of a viscious, human-hating robot, armed with range 3 lasers that do 1 damage.'
+
+  attackText: "The ghost robot shoots its lasers at you."
+  attackRange: 3
+
+  maxHealth: 2
+
+
 class GiantPotato extends Enemy
 
   char: 'P'
@@ -386,8 +398,8 @@ class Level
         new GiantPotato this
         enemies -= 1
       else if r < 0.4
-        new GiantPotato this
-        enemies -= 1
+        new GhostRobot this
+        enemies -= 2
       else if r < 0.6
         new GiantPotato this
         enemies -= 1
