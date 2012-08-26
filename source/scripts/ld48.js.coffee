@@ -483,12 +483,17 @@ class LDView extends Backbone.View
   render: ->
 
   update: ->
+    return if @game_over
     @unselect()
     if @current_level.is_complete
       @nextLevel()
     else
       @current_level.update()
     @mapView.render()
+    if not @player.notDead()
+      ($ '#game-over').css { display: 'block' }
+      @game_over = true
+
 
 $ ->
   game = new LDView

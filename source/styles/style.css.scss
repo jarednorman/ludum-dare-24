@@ -21,6 +21,25 @@ body {
   @include border-radius(5px);
 }
 
+@mixin overlay {
+  display: none;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  padding: 100px;
+  z-index: 9000;
+
+  background-color: rgba(0, 0, 0, 0.85);
+  color: $white;
+  
+  h1 {
+    margin-top: 20px;
+    font-size: 24px;
+  }
+}
+
 #page-wrap {
   position: relative;
   width: 1000px;
@@ -126,21 +145,11 @@ body {
   }
 
   #help {
-    display: none;
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    bottom: 0px;
-    left: 0px;
-    padding: 100px;
-    z-index: 9000;
+    @include overlay;
+  }
 
-    background-color: rgba(0, 0, 0, 0.85);
-    color: $white;
-    
-    h1 {
-      margin-top: 20px;
-    }
+  #game-over {
+    @include overlay;
   }
 }
 
