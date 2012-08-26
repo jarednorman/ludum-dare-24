@@ -18,7 +18,7 @@ class Thing
     @level = level
     @randomlyPlace()
 
-  randomlyPlace: ->
+  randomlyPlace: =>
     while true
       x = Math.floor Math.random() * WORLD_WIDTH
       y = Math.floor Math.random() * WORLD_HEIGHT
@@ -150,6 +150,11 @@ class Enemy extends LivingThing
         description: "Slash it with your sword."
         f: @tile.level.player.sword
         arg: { what: this }
+    if @tile.level.player.has_teleport
+      actions.push
+        description: "Randomly teleport it."
+        f: @randomlyPlace
+        arg: { }
     actions
 
 
@@ -179,7 +184,6 @@ class Player extends LivingThing
     super(@level)
     @has_teleport = false
     @has_heal = false
-    @has_push = false
     @has_sword = false
     @has_lightning = false
     @has_summon_wall = true
@@ -190,27 +194,22 @@ class Player extends LivingThing
     while x < 100
       x += 1
       r = Math.random()
-      if r < 1/6
+      if r < 1/5
         if not @has_teleport
           @has_teleport = true
           log.print "You've evolved the ability to teleport yourself, and enemies to a random location. Click on what you want to teleport to access the ability."
           break
-      else if r < 2/6
+      else if r < 2/5
         if not @has_heal
           @has_heal= true
           log.print "You've evolved the ability to heal yourself for 1 point of health. Click on yourself to access that ability."
           break
-      else if r < 3/6
-        if not @has_push
-          @has_push = true
-          log.print "You've evolved the ability to push enemies back with your mind. Click on enemies with 3 tiles of you to access the ability."
-          break
-      else if r < 4/6
+      else if r < 3/5
         if not @has_sword
           @has_sword = true
           log.print "You've evolved your left hand into a sword. You can now slash enemies, dealing 3 damage to them. Click on enemies adjacent to you to access the ability."
           break
-      else if r < 5/6
+      else if r < 4/5
         if not @has_lightning
           @has_lightning = true
           log.print "You've evolved the ability to shoot lightning from your ears, dealing 2 damage to enemies. Click on enemies within two tiles of you to access this ability."
@@ -233,8 +232,13 @@ class Player extends LivingThing
         @health = 0
         log.print "You have died."
       args: {}
+    if @tile.level.player.has_teleport
+      actions.push
+        description: "Randomly teleport yourself."
+        f: @randomlyPlace
+        arg: { }
     actions
-    
+
   sword: (arg) ->
     log.print "You slash the #{arg.what.name} with your sword, doing 2 damage."
     arg.what.hurt(3)
